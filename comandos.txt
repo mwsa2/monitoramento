@@ -1,0 +1,47 @@
+#cria o app
+laravel new monitoramento-app
+
+
+#cria o banco de dados
+CREATE DATABASE "monitoramento_app"
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+
+
+#categoria
+php artisan make:model Categoria -a
+php artisan make:interface /Interfaces/CategoriaRepositoryInterface
+php artisan make:class /Repositories/CategoriaRepository
+php artisan make:provider RepositoryServiceProvider
+php artisan make:class /Classes/ApiResponseClass
+php artisan make:resource CategoriaResource
+php artisan install:api
+
+
+#usuario
+php artisan make:model Usuario -a
+php artisan make:interface /Interfaces/UsuarioRepositoryInterface
+php artisan make:class /Repositories/UsuarioRepository
+php artisan make:resource UsuarioResource
+
+
+#transacao
+php artisan make:model Transacao -a
+php artisan make:interface /Interfaces/TransacaoRepositoryInterface
+php artisan make:class /Repositories/TransacaoRepository
+php artisan make:resource TransacaoResource
+
+
+
+#caso precise
+php artisan migrate
+php artisan serve
+

@@ -1,0 +1,426 @@
+openapi: 3.0.3
+info:
+  title: Swagger Monitoramento financeiro
+  description: |-
+    Seleção VLAB - Back-end
+  version: 1.0.11
+tags:
+  - name: categoria
+    description: Categorias de transacoes
+  - name: transacoes
+    description: Transações realizadas
+  - name: usuario
+    description: Usuários do sistema
+paths:
+  /api/categoria:
+    post:
+      tags:
+        - categoria
+      summary: Cadastrar uma categoria de transação
+      description: Cadastrar uma categoria de transação
+      operationId: addCategoria
+      requestBody:
+        description: Cadastrar uma categoria de transação
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+          application/form-data:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+        required: true
+      responses:
+        '201':
+          description: Categoria cadastrada com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categoria'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Categoria'
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+    get:
+      tags:
+        - categoria
+      summary: Listar categorias de transacao
+      description: Retornar uma lista de todas as categorias e seus respectivos ID’s
+      operationId: getCategorias
+      responses:
+        '200':
+          description: Categorias listadas!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Categoria'
+        '500':
+          description: Erro interno no servidor! 
+  /api/categoria/{id}:
+    put:
+      tags:
+        - categoria
+      summary: Editar categoria
+      description: Editar nome da categoria.
+      operationId: updatecategoria
+      parameters:
+        - name: id
+          in: path
+          description: identificador da categoria que será editada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Atualiza a categoria existente no banco de dados
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Categoria'
+      responses:
+        '201':
+          description: Categoria atualizada com sucesso!
+        '400':
+          description: valor de identificacao invalido!
+        '404':
+          description: Categoria não encontrada!
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+    delete:
+      tags:
+        - categoria
+      summary: Deletar uma categoria
+      description: deletar uma categoria
+      operationId: delCategoria
+      parameters:
+        - name: id
+          in: path
+          description: identificacao da categoria
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Categoria removida com sucesso!
+        '400':
+          description: valor de identificacao invalido!
+        '404':
+          description: Categoria não encontrada!
+        '500':
+          description: Erro interno no servidor!
+  /api/transacoes:
+    post:
+      tags:
+        - transacoes
+      summary: Efetuar uma transação
+      description: Efetuar uma transação
+      operationId: AddTransacao
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transacao'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Transacao'
+          application/form-data:
+            schema:
+              $ref: '#/components/schemas/Transacao'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Transacao'
+      responses:
+        '201':
+          description: Transacao efetuada com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transacao'
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+    get:
+      tags:
+        - transacoes
+      summary: Listar as transações (Com ou sem filtros)
+      description: Listar as transações realizadas
+      operationId: getTransacoes
+      parameters:
+        - name: id_categoria
+          in: query
+          description: Identificador da categoria das transações
+          required: false
+          explode: true
+          schema:
+            type: integer
+            format: int64
+        - name: id_usuario
+          in: query
+          description: Identificador do usuario das transações
+          required: false
+          explode: true
+          schema:
+            type: integer
+            format: int64
+        - name: tipo
+          in: query
+          description: Tipo das transações(Pagou ou Recebeu)
+          required: false
+          explode: true
+          schema:
+            format: int8
+            enum:
+              - 0 #recebeu
+              - 1 #pagou
+      responses:
+        '200':
+          description: Transações listadas!
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transacao'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transacao'
+        '400':
+          description: valor de identificacao invalido!
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+  /api/transacoes/{id}:
+    delete:
+      tags:
+        - transacoes
+      summary: Deletar uma transação
+      description: Será possível remover uma transação através do ID
+      operationId: delTransacao
+      parameters:
+        - name: id
+          in: path
+          description: Identificação da transação
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Transação removida com sucesso!
+        '400':
+          description: valor de identificacao invalido!
+        '404':
+          description: Transação não encontrada!
+        '500':
+          description: Erro interno no servidor!
+  /api/usuario:
+    post:
+      tags:
+        - usuario
+      summary: Cadastrar usuário
+      description: Criar um usuário
+      operationId: addUsuario
+      requestBody:
+        content:
+          application/form-data:
+            schema:
+              $ref: '#/components/schemas/AddUsuario'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddUsuario'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AddUsuario'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+      responses:
+        '201':
+          description: Usuário cadastrado com sucesso!
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+  /api/usuario/{id}:
+    put:
+      tags:
+        - usuario
+      summary: Editar usuário
+      description: Editar meus dados.
+      operationId: updateUsuario
+      parameters:
+        - name: id
+          in: path
+          description: identificador do usuario que será editado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Atualiza o usuário existente no banco de dados
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AddUsuario'
+      responses:
+        '201':
+          description: Usuário atualizado com sucesso!
+        '400':
+          description: valor de identificacao invalido!
+        '404':
+          description: usuario não encontrado!
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+    delete:
+      tags:
+        - usuario
+      summary: Deletar um usuário
+      description: Deletar um usuário através do seu ID
+      operationId: deleteUsuario
+      parameters:
+        - name: id
+          in: path
+          description: identificador do usuario que será deletado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Usuário deletado com sucesso!
+        '400':
+          description: valor de identificacao invalido!
+        '404':
+          description: usuario não encontrado!
+        '422':
+          description: Erro ao validar campos!
+        '500':
+          description: Erro interno no servidor!
+components:
+  schemas:
+    Categoria:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        nome:
+          type: string
+          description: nome da categoria
+          example: categoria teste
+      xml:
+        name: categoria
+    
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        nome:
+          type: string
+          example: Marcos Wanderson
+        cpf:
+          type: string
+          example: 000.000.123-45
+        data_cadastro:
+          type: string
+          format: date-time
+        email:
+          type: string
+          example: mwsa2@cin.ufpe.br
+        senha:
+          type: string
+          example: '12345'
+      xml:
+        name: usuario
+    AddUsuario:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Marcos Wanderson
+        cpf:
+          type: string
+          example: 000.000.123-45
+        email:
+          type: string
+          example: mwsa2@cin.ufpe.br
+        senha:
+          type: string
+          example: '12345'
+      xml:
+        name: Addusuario
+    Transacao:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 987
+        id_usuario:
+          $ref: '#/components/schemas/Usuario'
+        id_categoria:
+          $ref: '#/components/schemas/Categoria'
+        tipo:
+          type: integer
+          format: int8
+          enum:
+            - 0 #recebeu
+            - 1 #pagou
+        valor:
+          type: number
+          format: double
+          example: 15.15
+      xml:
+        name: transacao
+  requestBodies:
+    Categoria:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Categoria'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Categoria'
+    UserArray:
+      description: Lista de usuarios
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Usuario'
+  
